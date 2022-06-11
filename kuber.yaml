@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eauction.api.read
+spec:
+  selector:
+    matchLabels:
+      app: eauction.api.read-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eauction.api.read-pod
+    spec:      
+      containers:
+        - name: eauctionapiread-container
+          image: eaution.azurecr.io/eauctionapiread:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+      imagePullSecrets:
+        - name: acr-secret          
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+    name: eauctionapiread-service
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+        app: eauction.api.read-pod
+    type: LoadBalancer
+---
+
+---                
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eauction.api.write
+spec:
+  selector:
+    matchLabels:
+      app: eauction.api.write-pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eauction.api.write-pod
+    spec:      
+      containers:
+        - name: eauctionapiwrite-container
+          image: eaution.azurecr.io/eauctionapiwrite:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+      imagePullSecrets:
+        - name: acr-secret       
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+    name: eauctionapiwrite-service
+spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+        app: eauction.api.write-pod
+    type: LoadBalancer
+---

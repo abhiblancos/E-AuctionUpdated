@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  eauction.api.read:
+    image: ${DOCKER_REGISTRY-}eauctionapiread
+    build:
+      context: .
+      dockerfile: src/EAuction.API.Read/Dockerfile
+    ports:
+     - "8000:80" 
+
+  eauction.api.write:
+    image: ${DOCKER_REGISTRY-}eauctionapiwrite
+    build:
+      context: .
+      dockerfile: src/EAuction/Dockerfile
+    ports:
+     - "9000:80"
+    volumes:
+     - ..//..//dataeventrecords.sqlite 
